@@ -1,5 +1,5 @@
 import SwiftUI
-internal import Combine
+import Combine
 
 // MARK: - Models
 
@@ -79,47 +79,111 @@ final class GameState: ObservableObject {
         startQuestion()
     }
 
-    func loadQuestions(for g: Genre) {
-        // Sample questions; you can change per genre if you want
-        let sample: [Question] = [
-            Question(
-                text: "Which animal is the largest land mammal?",
-                options: ["Lion", "Elephant", "Hippopotamus", "Giraffe"],
-                correctIndex: 1,
-                explanation: "Elephant 🐘"
-            ),
-            Question(
-                text: "Which planet is known as the Red Planet?",
-                options: ["Venus", "Mars", "Jupiter", "Saturn"],
-                correctIndex: 1,
-                explanation: "Mars"
-            ),
-            Question(
-                text: "What is the capital of France?",
-                options: ["Berlin", "Paris", "Rome", "Madrid"],
-                correctIndex: 1,
-                explanation: "Paris"
-            ),
-            Question(
-                text: "In computing, what does CPU stand for?",
-                options: [
-                    "Central Processing Unit",
-                    "Core Power Unit",
-                    "Compute Process Utility",
-                    "Central Power Unit"
-                ],
-                correctIndex: 0,
-                explanation: "Central Processing Unit"
-            ),
-            Question(
-                text: "Which ocean is the largest?",
-                options: ["Atlantic", "Indian", "Pacific", "Arctic"],
-                correctIndex: 2,
-                explanation: "Pacific"
-            )
-        ]
+    // MARK: - Question bank per genre
 
-        questions = Array(sample.prefix(roundsPerGame))
+    func loadQuestions(for g: Genre) {
+        switch g {
+        case .music:
+            // Your MUSIC questions
+            questions = [
+                Question(
+                    text: "Which artist holds the record for the most Grammy wins in history?",
+                    options: [
+                        "Quincy Jones",        // A
+                        "Beyoncé",             // B
+                        "Georg Solti",         // C (correct)
+                        "Jay-Z"                // D
+                    ],
+                    correctIndex: 2,           // C
+                    explanation: "Georg Solti has the most Grammy wins."
+                ),
+                Question(
+                    text: "Who is known as the “King of Pop”?",
+                    options: [
+                        "Bruno Mars",          // A
+                        "Justin Timberlake",   // B
+                        "Michael Jackson",     // C (correct)
+                        "Lionel Richie"        // D
+                    ],
+                    correctIndex: 2,           // C
+                    explanation: "Michael Jackson is the King of Pop."
+                ),
+                Question(
+                    text: "Which song became the first YouTube video to surpass 1 billion views?",
+                    options: [
+                        "“Shape of You” – Ed Sheeran",   // A
+                        "“Baby” – Justin Bieber",        // B
+                        "“Gangnam Style” – PSY",         // C (correct)
+                        "“Despacito” – Luis Fonsi"       // D
+                    ],
+                    correctIndex: 2,                     // C
+                    explanation: "PSY’s “Gangnam Style” was the first to hit 1B views."
+                ),
+                Question(
+                    text: "Which artist released an album entirely visual, with each track having its own accompanying film?",
+                    options: [
+                        "Lady Gaga – Chromatica",        // A
+                        "Beyoncé – Lemonade",            // B (correct)
+                        "Billie Eilish – Happier Than Ever", // C
+                        "Taylor Swift – Evermore"        // D
+                    ],
+                    correctIndex: 1,                     // B
+                    explanation: "Beyoncé’s “Lemonade” is a visual album."
+                ),
+                Question(
+                    text: "Which band holds the record for the highest-selling album of all time in the US with “Their Greatest Hits (1971–1975)”?",
+                    options: [
+                        "The Eagles",                    // A (correct)
+                        "Fleetwood Mac",                 // B
+                        "Bee Gees",                      // C
+                        "The Rolling Stones"             // D
+                    ],
+                    correctIndex: 0,                     // A
+                    explanation: "The Eagles’ compilation is the top-selling US album."
+                )
+            ]
+
+        default:
+            // Generic sample questions for other genres (you can customize later)
+            let sample: [Question] = [
+                Question(
+                    text: "Which animal is the largest land mammal?",
+                    options: ["Lion", "Elephant", "Hippopotamus", "Giraffe"],
+                    correctIndex: 1,
+                    explanation: "Elephant 🐘"
+                ),
+                Question(
+                    text: "Which planet is known as the Red Planet?",
+                    options: ["Venus", "Mars", "Jupiter", "Saturn"],
+                    correctIndex: 1,
+                    explanation: "Mars"
+                ),
+                Question(
+                    text: "What is the capital of France?",
+                    options: ["Berlin", "Paris", "Rome", "Madrid"],
+                    correctIndex: 1,
+                    explanation: "Paris"
+                ),
+                Question(
+                    text: "In computing, what does CPU stand for?",
+                    options: [
+                        "Central Processing Unit",
+                        "Core Power Unit",
+                        "Compute Process Utility",
+                        "Central Power Unit"
+                    ],
+                    correctIndex: 0,
+                    explanation: "Central Processing Unit"
+                ),
+                Question(
+                    text: "Which ocean is the largest?",
+                    options: ["Atlantic", "Indian", "Pacific", "Arctic"],
+                    correctIndex: 2,
+                    explanation: "Pacific"
+                )
+            ]
+            questions = Array(sample.prefix(roundsPerGame))
+        }
     }
 
     func startQuestion() {
