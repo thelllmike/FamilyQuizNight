@@ -84,7 +84,7 @@ final class GameState: ObservableObject {
     func loadQuestions(for g: Genre) {
         switch g {
         case .music:
-            // Your MUSIC questions
+            // MUSIC questions
             questions = [
                 Question(
                     text: "Which artist holds the record for the most Grammy wins in history?",
@@ -122,12 +122,12 @@ final class GameState: ObservableObject {
                 Question(
                     text: "Which artist released an album entirely visual, with each track having its own accompanying film?",
                     options: [
-                        "Lady Gaga – Chromatica",        // A
-                        "Beyoncé – Lemonade",            // B (correct)
+                        "Lady Gaga – Chromatica",            // A
+                        "Beyoncé – Lemonade",                // B (correct)
                         "Billie Eilish – Happier Than Ever", // C
-                        "Taylor Swift – Evermore"        // D
+                        "Taylor Swift – Evermore"            // D
                     ],
-                    correctIndex: 1,                     // B
+                    correctIndex: 1,                         // B
                     explanation: "Beyoncé’s “Lemonade” is a visual album."
                 ),
                 Question(
@@ -144,7 +144,7 @@ final class GameState: ObservableObject {
             ]
 
         default:
-            // Generic sample questions for other genres (you can customize later)
+            // Generic sample questions for other genres
             let sample: [Question] = [
                 Question(
                     text: "Which animal is the largest land mammal?",
@@ -256,7 +256,7 @@ struct FamilyQuizNightApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
-                .frame(minWidth: 1280, minHeight: 720) // nice big window
+                .frame(minWidth: 1280, minHeight: 720)
                 .environmentObject(game)
         }
     }
@@ -304,12 +304,11 @@ struct HomeScreen: View {
                 }
 
                 LargeButton("Join Game") {
-                    // MVP: no controllers, just go to lobby
                     game.fakeLobby()
                 }
 
                 LargeButton("Settings") {
-                    // TODO: add settings later
+                    // TODO
                 }
             }
         }
@@ -399,6 +398,14 @@ struct QuestionScreen: View {
         return game.questions[game.roundIndex]
     }
 
+    // Get Sam's selected option (if any)
+    var samSelection: Int? {
+        guard let sam = game.players.first(where: { $0.name == "Sam" }) else {
+            return nil
+        }
+        return game.selectedByPlayer[sam.id]
+    }
+
     var progress: CGFloat {
         let total = CGFloat(game.timePerQuestion)
         let left = CGFloat(game.timerSeconds)
@@ -439,14 +446,18 @@ struct QuestionScreen: View {
             VStack(spacing: 20) {
                 ForEach(0..<4, id: \.self) { idx in
                     let label = "ABCD"[idx]
+                    let isCorrect = (q?.correctIndex == idx)
+                    let isSelected = (samSelection == idx)
+
                     OptionRow(
                         label: String(label),
                         text: q?.options[safe: idx] ?? "",
-                        isCorrect: game.revealedCorrect && (idx == q?.correctIndex),
+                        isCorrect: isCorrect,
+                        isSelected: isSelected,
+                        showResult: game.revealedCorrect,
                         isDisabled: !game.isCountingDown
                     ) {
                         if game.isCountingDown {
-                            // Simulate Sam answering
                             if let sam = game.players.first(where: { $0.name == "Sam" }) {
                                 game.selectedByPlayer[sam.id] = idx
                             }
@@ -586,6 +597,8 @@ struct OptionRow: View {
     var label: String
     var text: String
     var isCorrect: Bool
+    var isSelected: Bool
+    var showResult: Bool   // true after timer ends
     var isDisabled: Bool
     var onSelect: () -> Void
 
@@ -593,7 +606,7 @@ struct OptionRow: View {
         Button(action: onSelect) {
             HStack(spacing: 18) {
                 Circle()
-                    .fill(isCorrect ? Color.green : Color.gray.opacity(0.3))
+                    .fill(circleColor)
                     .frame(width: 40, height: 40)
                     .overlay(
                         Text(label)
@@ -610,15 +623,34 @@ struct OptionRow: View {
             .padding()
             .background(
                 RoundedRectangle(cornerRadius: 16)
-                    .fill(
-                        isCorrect
-                        ? Color.green.opacity(0.15)
-                        : Color.gray.opacity(0.12)
-                    )
+                    .fill(backgroundColor)
             )
         }
         .buttonStyle(.plain)
         .disabled(isDisabled)
+    }
+
+    // Colors for different states
+    private var circleColor: Color {
+        if showResult {
+            if isCorrect { return .green }
+            if isSelected && !isCorrect { return .red }
+            return Color.gray.opacity(0.3)
+        } else {
+            if isSelected { return .blue }
+            return Color.gray.opacity(0.3)
+        }
+    }
+
+    private var backgroundColor: Color {
+        if showResult {
+            if isCorrect { return Color.green.opacity(0.15) }
+            if isSelected && !isCorrect { return Color.red.opacity(0.15) }
+            return Color.gray.opacity(0.12)
+        } else {
+            if isSelected { return Color.blue.opacity(0.15) }
+            return Color.gray.opacity(0.12)
+        }
     }
 }
 
