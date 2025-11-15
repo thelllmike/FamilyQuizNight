@@ -10,9 +10,23 @@
 		1A7F2B572EC60E7500AC0676 /* FamilyQuizNight.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FamilyQuizNight.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1ACBED352EC8499E00B79DE3 /* Exceptions for "FamilyQuizNight" folder in "FamilyQuizNight" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				ContentView.swift,
+				FamilyQuizNightApp.swift,
+			);
+			target = 1A7F2B562EC60E7500AC0676 /* FamilyQuizNight */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		1A7F2B592EC60E7500AC0676 /* FamilyQuizNight */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1ACBED352EC8499E00B79DE3 /* Exceptions for "FamilyQuizNight" folder in "FamilyQuizNight" target */,
+			);
 			path = FamilyQuizNight;
 			sourceTree = "<group>";
 		};
